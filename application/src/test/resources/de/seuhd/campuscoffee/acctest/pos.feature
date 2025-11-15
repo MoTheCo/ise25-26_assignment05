@@ -10,4 +10,12 @@ Feature: Points of Sale Management
       | New Vending Machine    | Use only in case of emergencies  | VENDING_MACHINE | BERGHEIM  | Teststraße      | 99a          | 12345      | Other City |
     Then the POS list should contain the same elements in the same order
 
-# TODO: Add new scenario "Update one of three existing POS"
+Scenario: Update one of three existing POS
+  Given an empty POS list
+  When I insert POS with the following elements
+    | name         | description       | type  | campus      | street              | houseNumber | postalCode | city       |
+    | Schmelzpunkt | Café Schmelzpunkt | CAFE  | NEUENHEIMER | Im Neuenheimer Feld | 348         | 69120      | Heidelberg |
+    | Mensa INF    | Mensa INF 304     | MENSA | NEUENHEIMER | Im Neuenheimer Feld | 304         | 69120      | Heidelberg |
+    | Café Botanik | Botanischer Garten| CAFE  | NEUENHEIMER | Im Neuenheimer Feld | 360         | 69120      | Heidelberg |
+  And I update the description of POS "Schmelzpunkt" to "Updated Café Schmelzpunkt"
+  Then the POS "Schmelzpunkt" should have description "Updated Café Schmelzpunkt"

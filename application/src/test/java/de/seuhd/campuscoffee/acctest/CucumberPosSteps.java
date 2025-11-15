@@ -101,7 +101,15 @@ public class CucumberPosSteps {
         assertThat(createdPosList).size().isEqualTo(posList.size());
     }
 
-    // TODO: Add When step for new scenario
+    @When("I update the description of POS {string} to {string}")
+    public void iUpdateTheDescriptionOfPosTo(String name, String newDescription) {
+        PosDto pos = retrievePosByName(name);
+        PosDto updatedPosDto = pos.toBuilder()
+                .description(newDescription)
+                .build();
+        List<PosDto> updatedPosList = updatePos(List.of(updatedPosDto));
+        updatedPos = updatedPosList.get(0);
+    }
 
     // Then -----------------------------------------------------------------------
 
@@ -113,5 +121,9 @@ public class CucumberPosSteps {
                 .containsExactlyInAnyOrderElementsOf(createdPosList);
     }
 
-    // TODO: Add Then step for new scenario
+    @Then("the POS {string} should have description {string}")
+    public void thePOSShouldHaveDescription(String name, String expectedDescription) {
+        PosDto pos = retrievePosByName(name);
+        assertThat(pos.description()).isEqualTo(expectedDescription);
+    }
 }

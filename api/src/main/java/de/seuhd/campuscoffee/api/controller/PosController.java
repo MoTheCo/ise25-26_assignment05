@@ -2,7 +2,9 @@ package de.seuhd.campuscoffee.api.controller;
 
 import de.seuhd.campuscoffee.api.dtos.PosDto;
 import de.seuhd.campuscoffee.api.mapper.PosDtoMapper;
+import de.seuhd.campuscoffee.domain.exceptions.PosNotFoundException;
 import de.seuhd.campuscoffee.domain.model.CampusType;
+import de.seuhd.campuscoffee.domain.model.Pos;
 import de.seuhd.campuscoffee.domain.ports.PosService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +44,21 @@ public class PosController {
         );
     }
 
-    // TODO: Implement a new GET endpoint that supports filtering POS by name, e.g., /filter?name=Schmelzpunkt
+    /**
+     * Retrieves a Point of Sale by its name.
+     *
+     * @param name the name of the POS to retrieve
+     * @return the POS with the specified name
+     * @throws PosNotFoundException if no POS exists with the given name
+     */
+    @GetMapping("/filter")
+    public ResponseEntity<PosDto> getPosByName(@RequestParam String name) throws PosNotFoundException {
+        log.debug("Received request to get POS by name: {}", name);
+        Pos pos = posService.getByName(name);
+        PosDto posDto = posDtoMapper.fromDomain(pos);
+        log.info("Successfully retrieved POS by name: {}", name);
+        return ResponseEntity.ok(posDto);
+    }
 
     @PostMapping("")
     public ResponseEntity<PosDto> create(
